@@ -30,13 +30,26 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Device: {device}')
 
 MODEL_ID = "jonatasgrosman/wav2vec2-large-xlsr-53-english"
+#MODEL_ID = "facebook/wav2vec2-base-10k-voxpopuli-ft-en"
 
 print(f'Loading Wav2Vec2CTC Model: "{MODEL_ID}"')
 processor = Wav2Vec2Processor.from_pretrained(MODEL_ID)
 model = Wav2Vec2ForCTC.from_pretrained(MODEL_ID)
 
+### DEBUG ###
+print(type(processor))
+print()
+print(type(model))
+print()
+print(processor)
+print()
+print(model)
+###
+
 vocab_dict = processor.tokenizer.get_vocab()
 sort_vocab = sorted((value, key) for (key,value) in vocab_dict.items())
+
+print(sort_vocab)
 
 # Lower case ALL letters
 vocab = []
@@ -87,11 +100,11 @@ greedy_decoded_output, greedy_decoded_offsets = greedy_decoder.decode(logits)
 
 print('Printing the output of the first audio file...\n')
 
-print('Greedy Decoding Output:', greedy_decoded_output[3][0])
+print('Greedy Decoding Output:', greedy_decoded_output[1][0])
 print()
 print('#'*85)
 print()
-print('Beam Search Decoding Output:', beam_decoded_output[3][0]) # print the top prediction of the beam search
+print('Beam Search Decoding Output:', beam_decoded_output[1][0]) # print the top prediction of the beam search
 
 print('Compute Segments....')
 batch_segments_list_greedy = utils.get_segments(logits, greedy_decoded_output, max_signal_length, sampling_rate, vocab)
@@ -101,9 +114,9 @@ print('Printing the first segment (word) of the first audio file...')
 print()
 print('#'*85)
 print()
-print('Greedy Decoding Output:', batch_segments_list_greedy[3][0])
+print('Greedy Decoding Output:', batch_segments_list_greedy[1][0])
 print()
-print('Beam Search Decoding Output:', batch_segments_list_beam[3][0])
+print('Beam Search Decoding Output:', batch_segments_list_beam[1][0])
 
 print('Done!!')
 
