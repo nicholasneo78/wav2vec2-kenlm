@@ -18,7 +18,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
 && apt-get upgrade -y \
 && apt-get install -y \
-&& apt-get -y install apt-utils gcc jupyterlab libpq-dev libsndfile1 ffmpeg cython wget git \
+&& apt-get -y install apt-utils gcc jupyter libpq-dev libsndfile1 ffmpeg cython wget git \
 && apt-get -y install build-essential cmake libboost-system-dev libboost-thread-dev libboost-program-options-dev libboost-test-dev libeigen3-dev zlib1g-dev libbz2-dev liblzma-dev
 
 RUN wget -O - https://kheafield.com/code/kenlm.tar.gz | tar xz
@@ -44,6 +44,19 @@ RUN git clone --recursive https://github.com/parlance/ctcdecode.git \
 && cd ctcdecode \ 
 && pip install .
 
-# Switch back to jovyan to avoid accidental container runs as root
-USER $NB_UID
+# installing jupyter lab inside
+RUN pip install jupyterlab
+
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# declare port used by jupyterlab
+EXPOSE 8888
+
+# set default command for jupyterlab
+CMD ["jupyter", "lab", "--port=8888", "--no-browser", "--ip='*'", "--NotebookApp.token=''", "--NotebookApp.password=''", "--allow-root"]
+
 WORKDIR /w2v2_kenlm
+RUN ["bash"]
