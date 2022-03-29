@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=python:3.8.13-slim-buster 
+ARG BASE_CONTAINER=python:3.8.13-slim-buster
 FROM $BASE_CONTAINER
 
 USER root
@@ -18,7 +18,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update \
 && apt-get upgrade -y \
 && apt-get install -y \
-&& apt-get -y install apt-utils gcc libpq-dev libsndfile1 ffmpeg cython wget git \
+&& apt-get -y install apt-utils gcc jupyterlab libpq-dev libsndfile1 ffmpeg cython wget git \
 && apt-get -y install build-essential cmake libboost-system-dev libboost-thread-dev libboost-program-options-dev libboost-test-dev libeigen3-dev zlib1g-dev libbz2-dev liblzma-dev
 
 RUN wget -O - https://kheafield.com/code/kenlm.tar.gz | tar xz
@@ -34,10 +34,9 @@ RUN mkdir kenlm/build && cd kenlm/build && cmake .. && make -j2
 # && python setup.py install --optimize=1 --skip-build
 
 # numpy problems
-#RUN pip uninstall -y numpy --no-cache-dir
 RUN pip install numpy==1.15.1 --no-binary numpy
 
-#Installing dependencies
+# installing dependencies
 RUN pip install -r requirements.txt
 
 # build ctcdecode from source

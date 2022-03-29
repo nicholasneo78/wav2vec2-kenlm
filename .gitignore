@@ -130,3 +130,6 @@ dmypy.json
 
 # language models folder
 lm/*
+
+# audio flac files
+*.flac

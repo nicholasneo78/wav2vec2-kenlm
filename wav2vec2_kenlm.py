@@ -48,13 +48,12 @@ vocab[vocab.index(processor.tokenizer.word_delimiter_token)] = ' '
 
 # you can download the following ARPA LM from this link:
 # "https://kaldi-asr.org/models/5/4gram_big.arpa.gz"
-lm_path = "data/local/local_lm/data/arpa/4gram_big.arpa" 
+lm_path = "lm/4gram_big.arpa.gz" 
 
 # alpha, beta, and beam_wdith SHOULD be tuned on the dev-set to get the best settings
 # Feel free to check other inputs of the BeamCTCDecoder
 alpha=0
 beta=0
-
 beam_width = 1024
 
 beam_decoder = BeamCTCDecoder(vocab, lm_path=lm_path,
@@ -70,7 +69,8 @@ greedy_decoder = GreedyDecoder(vocab, blank_index=vocab.index(processor.tokenize
 # load the test audio file
 # NOTE: we are loading the same file multiple times to simulate batch processing.
 # Hence, you can assign a list of paths to different audio files of your choice and test the feature.
-audio_files_paths = ['english_sample.wav'] * 3
+#audio_files_paths = ['english_sample.wav'] * 2
+audio_files_paths = ['84-121123-0001.flac', '84-121123-0002.flac', '10993-2114000-0001.flac', '10993-2114000-0002.flac']
 
 print(f'Load audio files: "{audio_files_paths}"')
 batch_audio_files, sampling_rate = utils.load_audio_files(audio_files_paths)
@@ -85,21 +85,25 @@ print('Decoding using the Greedy Decoder....')
 greedy_decoded_output, greedy_decoded_offsets = greedy_decoder.decode(logits)
 
 
-print('Printing the output of the first audio file...')
-print('Greedy Decoding Output:', greedy_decoded_output[0][0])
-print('#'*85)
-print('Beam Search Decoding Output:', beam_decoded_output[0][0]) # print the top prediction of the beam search
+print('Printing the output of the first audio file...\n')
 
+print('Greedy Decoding Output:', greedy_decoded_output[3][0])
+print()
+print('#'*85)
+print()
+print('Beam Search Decoding Output:', beam_decoded_output[3][0]) # print the top prediction of the beam search
 
 print('Compute Segments....')
 batch_segments_list_greedy = utils.get_segments(logits, greedy_decoded_output, max_signal_length, sampling_rate, vocab)
 batch_segments_list_beam = utils.get_segments(logits, beam_decoded_output, max_signal_length, sampling_rate, vocab)
 
 print('Printing the first segment (word) of the first audio file...')
-print('Greedy Decoding Output:', batch_segments_list_greedy[0][0])
+print()
 print('#'*85)
-print('Beam Search Decoding Output:', batch_segments_list_beam[0][0])
-
+print()
+print('Greedy Decoding Output:', batch_segments_list_greedy[3][0])
+print()
+print('Beam Search Decoding Output:', batch_segments_list_beam[3][0])
 
 print('Done!!')
 
