@@ -35,9 +35,15 @@ RUN mkdir kenlm/build && cd kenlm/build && cmake .. && make -j2
 
 # numpy problems
 #RUN pip uninstall -y numpy --no-cache-dir
+RUN pip install numpy==1.15.1 --no-binary numpy
 
 #Installing dependencies
 RUN pip install -r requirements.txt
+
+# build ctcdecode from source
+RUN git clone --recursive https://github.com/parlance/ctcdecode.git \
+&& cd ctcdecode \ 
+&& pip install .
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

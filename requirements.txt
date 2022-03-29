@@ -4,8 +4,6 @@ torchaudio
 transformers
 librosa
 jiwer
-pyctcdecode
 Levenshtein
 six
 ipywidgets
-numpy
