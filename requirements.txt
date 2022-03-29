@@ -1,10 +1,11 @@
+ctc-segmentation
 torch
 torchaudio
 transformers
 librosa
 jiwer
 pyctcdecode
-ctc-segmentation
 Levenshtein
 six
 ipywidgets
+numpy
